@@ -1,6 +1,6 @@
 {% set year = "2024" %}
-{% set month = "01" %}
-{% set day = "17" %}
+{% set month = "06" %}
+{% set day = "18" %}
 {% set version = "1.79.0" %}
 
 package:
@@ -13,56 +13,56 @@ source:
   # applies to *all* of these inputs, not just the last one in the list, because
   # of the way that the YAML selector processing works.
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-nightly-x86_64-unknown-linux-gnu.tar.gz  # [linux and x86_64]
-    sha256: dc48d4935058fdc11c52185439d61850549f46281c9c6ccaf5a1fbc3aff9a8b1  # [linux and x86_64]
+    sha256: 68348c278f8b282e70fe45da778c9f9711bf3214c5602ad91153ac1ff7742568  # [linux and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-nightly-aarch64-unknown-linux-gnu.tar.gz  # [aarch64]
-    sha256: fbba752fb979bdc72ab96a023138354207662e97499fc11d8d76af7582da5afb  # [aarch64]
+    sha256: 7011e9b0ad75868d2fd4cf41b4c96fdbef7808f2d5ba85ae8fd1f36e9b6d21f8  # [aarch64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-nightly-powerpc64le-unknown-linux-gnu.tar.gz  # [ppc64le]
-    sha256: 5b5ef49a4b722a056312b8ccd16b2490e3b523d05ad000c8a1ca6c86b18e47dd  # [ppc64le]
+    sha256: 6585abbf8d2cf51ca9bc05f97d5286c3d693ee661b00198988311c159f291e1c  # [ppc64le]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-nightly-x86_64-apple-darwin.tar.gz  # [osx and x86_64]
-    sha256: cbf7ac4e1854e4ad091e2089b400aa56912fb9b3dec30d6ffc5307d20d7887cf  # [osx and x86_64]
+    sha256: 90f55454dee71c447c3e36f69f381291bb3d734189528bc042bcf5f797346ea0  # [osx and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-nightly-aarch64-apple-darwin.tar.gz  # [osx and arm64]
-    sha256: 1ba423e43ff498422c3af65c67841338ace811439db845574c8fe7127479c25d  # [osx and arm64]
+    sha256: 9b7249b4e48ee17c55c4b1f2642e9168b7ce4e6df241d599077f4b6567a99500  # [osx and arm64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-nightly-x86_64-pc-windows-msvc.tar.gz  # [win64]
-    sha256: d592aed905c0fed937ab036b5a9dba0bdfbaa9c6622b53ae29c6bce3b16edbdd  # [win64]
+    sha256: 25fbebec496f45a5af63f2dc089da0e6ece7d902e562b398f7e416f682dbb394  # [win64]
     patches:
       - 0001-gh-106-install.sh-Perfomance-Use-more-shell-builtins.diff
   # End of block of primary source files.
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-src-nightly.tar.gz
-    sha256: 38dd4d87c470ac77e18a4519fc7953b4bb5bf4c816e49ccda82991d3978cb15f
+    sha256: cc349244cafa32b02077f1f8bd1ad3fe63f1573eaf29a867c4105eaf67fbf225
     folder: rust-src
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-aarch64-apple-ios.tar.gz  # [(linux or win) and x86_64]
-    sha256: 746691a0541722830b24631d689c8430e19a11e96590dcd86530f88c97df6e28  # [(linux or win) and x86_64]
+    sha256: 9c6c36e4f52015a4e296230ec491eea1350d137133d85b77306576d5b49ea0f4  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-x86_64-apple-ios.tar.gz  # [(linux or win) and x86_64]
-    sha256: 5fa5c9e612cf13b7842e7969cdf09ac76a2cd5db0e85d00e14448b77fe3d601d  # [(linux or win) and x86_64]
+    sha256: ce7dfe7f8d012a898210c253f80b8adf10979cf6599189b6db4b71567e0d9f4b  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-aarch64-apple-ios-sim.tar.gz  # [(linux or win) and x86_64]
-    sha256: e97be6309a645bc38579e383488d2d0cd8294dd58a45dbb6c83e5128af98505a  # [(linux or win) and x86_64]
+    sha256: 22cd7b63173511141e8954e07a484bca6d92b7d4cd0a8b3e40f6fbb316ad7b30  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-aarch64-linux-android.tar.gz  # [(linux or win) and x86_64]
-    sha256: 7403e96ab5e1bfc600bb60e73200c8d77448492e86beff91e2fd4228d0b6fbcb  # [(linux or win) and x86_64]
+    sha256: f8a051f81a1339b37130fd1c31538036c66fbfe3c153f792fa416a0a4a26e8a2  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-arm-linux-androideabi.tar.gz  # [(linux or win) and x86_64]
-    sha256: f9e00560b8813ba1eeb2aeecb141e131a73765698d87c737f46cbf28b64ac88d  # [(linux or win) and x86_64]
+    sha256: 06cce4dcf8cf152444684ec1f134206cc8b57943c744d98b3365aaf5995df7c2  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-armv7-linux-androideabi.tar.gz  # [(linux or win) and x86_64]
-    sha256: ab48fff0f00a0835c34ae6b0d8d5c939dc217e1f58ca89fe7128e4b95ab33864  # [(linux or win) and x86_64]
+    sha256: 3a99c1922a3bc0d6fe97552b99c7cc47fc16a911540133dfdc1d4cfe1d609c92  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-i686-linux-android.tar.gz  # [(linux or win) and x86_64]
-    sha256: 66a5853f025cd9be3b8ce1e60a70398cc958ff4f9ecbe4f46e395ed8afff8930  # [(linux or win) and x86_64]
+    sha256: 167e2eee9f7fc416f04390beeb6f86560e7865755550ea00ac121121869cb49b  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-x86_64-linux-android.tar.gz  # [(linux or win) and x86_64]
-    sha256: 65462a3aaabcf4d439b6739f87739025af5b90dced525ea2dc07105362ee797f  # [(linux or win) and x86_64]
+    sha256: b85b7dd18145268926ed344d1cd93703b922ff63c73bd48aff09b21cdff5d82a  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-wasm32-unknown-unknown.tar.gz  # [(linux or win) and x86_64]
-    sha256: 82a84bf40016bdd15006d4561d111336427f20b2b955f4d7cb41c0babdb93324  # [(linux or win) and x86_64]
+    sha256: 85744025287261d65983dd287468fda1b7446ed517cd20983f91331ff4545714  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
   - url: https://static.rust-lang.org/dist/{{ year }}-{{ month }}-{{ day }}/rust-std-nightly-x86_64-pc-windows-msvc.tar.gz  # [(linux or win) and x86_64]
-    sha256: 451668f2a59b197b7267236383eaea3c7d42682af9c0bee357d81f9bffba752d  # [(linux or win) and x86_64]
+    sha256: 06a6b0f2e2e994ec235aec6dd1b67fad5b72c7eff6bf9de8772d2157b54908b2  # [(linux or win) and x86_64]
     folder: rust-std  # [(linux or win) and x86_64]
 
 build:
-  number: 1
+  number: 0
 
 requirements:
   build:
