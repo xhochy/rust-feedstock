@@ -92,6 +92,19 @@ call :end_group
 call :run_repodata_diagnostics
 if !errorlevel! neq 0 echo Repodata diagnostics could not be completed; continuing with the recipe build.
 
+:: The same Rust archive fails indexing in the runner's default temp directory
+:: but passes indexing and tests in this checkout-local directory.
+:: Retain the original paths for the failure diagnostics below.
+set "RATTLER_BUILD_ORIGINAL_TEMP=%TEMP%"
+set "RATTLER_BUILD_ORIGINAL_TMP=%TMP%"
+set "TEMP=%REPO_ROOT%\.repodata-diagnostics\tmp"
+set "TMP=%TEMP%"
+if not exist "%TEMP%" (
+    mkdir "%TEMP%"
+    if !errorlevel! neq 0 exit /b !errorlevel!
+)
+echo Using Rust build temporary directory: %TEMP%
+
 :: Build the recipe
 echo Building recipe
 rattler-build.exe build -vvv --recipe "recipe" -m .ci_support\%CONFIG%.yaml %EXTRA_CB_OPTIONS% --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
@@ -207,6 +220,8 @@ if not exist "%DIAG_ROOT%\tmp" (
 )
 
 call :start_group "Rust archive diagnostic: default temporary directory"
+if defined RATTLER_BUILD_ORIGINAL_TEMP set "TEMP=%RATTLER_BUILD_ORIGINAL_TEMP%"
+if defined RATTLER_BUILD_ORIGINAL_TMP set "TMP=%RATTLER_BUILD_ORIGINAL_TMP%"
 echo Package: %DIAG_PACKAGE%
 attrib "%DIAG_PACKAGE%"
 echo TEMP=%TEMP%
