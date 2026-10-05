@@ -43,5 +43,5 @@ for arch in \
   if [[ "$arch" == aarch64-pc-windows-msvc ]]; then
     extension=tar.xz
   fi
-  emit_source '      - ' '        ' "rust-std-nightly-${arch}.${extension}" rust-std
+  emit_source '      - ' '        ' "rust-std-nightly-${arch}.${extension}" "rust-std/${arch}"
 done

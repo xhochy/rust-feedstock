@@ -73,46 +73,46 @@ source:
     then:
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-aarch64-apple-ios.tar.gz
         sha256: 6ae3ba50039e1352c2f7a2638f3cc5249faec8c0abcc14bcfbc278fb230558a1
-        target_directory: rust-std
+        target_directory: rust-std/aarch64-apple-ios
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-x86_64-apple-ios.tar.gz
         sha256: a952bb0489453974e29c89c445a2e466623c4071d4045416a8492465d2837d7a
-        target_directory: rust-std
+        target_directory: rust-std/x86_64-apple-ios
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-aarch64-apple-ios-sim.tar.gz
         sha256: b2545135081fe4ffed86c58cf2300062b35d30cd05d86be36d44963a6a99f50a
-        target_directory: rust-std
+        target_directory: rust-std/aarch64-apple-ios-sim
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-aarch64-linux-android.tar.gz
         sha256: 55e98cc2eeb6651be5704f1dd3627468b6b824b74368ff8b0b4e179b865e28d8
-        target_directory: rust-std
+        target_directory: rust-std/aarch64-linux-android
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-arm-linux-androideabi.tar.gz
         sha256: 605b96b61417d42d060580b03028999bf760a6fafbc5ff9dcad0e3dbeecb156c
-        target_directory: rust-std
+        target_directory: rust-std/arm-linux-androideabi
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-armv7-linux-androideabi.tar.gz
         sha256: 7deeef706f5568a64a35915c21a3baa9614778381ce1a4227436c49737cdd5a6
-        target_directory: rust-std
+        target_directory: rust-std/armv7-linux-androideabi
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-i686-linux-android.tar.gz
         sha256: e5138da242ace839945f43418a500e89371c2eb182407e9c1341d710637d2ce3
-        target_directory: rust-std
+        target_directory: rust-std/i686-linux-android
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-x86_64-linux-android.tar.gz
         sha256: 36c9f68c5ece26b3b5c9c2d34cc0ff68e2902512e20de7dc746c8bba2b7b06c0
-        target_directory: rust-std
+        target_directory: rust-std/x86_64-linux-android
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-wasm32-unknown-unknown.tar.gz
         sha256: 58ee87361fda05258d97cf3806623db01750764e7b97381b60ce4a14746ce5fc
-        target_directory: rust-std
+        target_directory: rust-std/wasm32-unknown-unknown
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-x86_64-pc-windows-msvc.tar.gz
         sha256: b3f4f392422c385b9a051c68f46bb6025079dfae4887a86181f20ff61ead1b58
-        target_directory: rust-std
+        target_directory: rust-std/x86_64-pc-windows-msvc
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-wasm32-unknown-emscripten.tar.gz
         sha256: 55b62430e0292b44f71259e05557e3aec798f78ce8575e2facb773ad379e0648
-        target_directory: rust-std
+        target_directory: rust-std/wasm32-unknown-emscripten
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-thumbv7em-none-eabihf.tar.gz
         sha256: ce339aadb0ffc8d3b7f997d6ac9acb79039dd87fa3b72584091286674dba0475
-        target_directory: rust-std
+        target_directory: rust-std/thumbv7em-none-eabihf
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-x86_64-pc-windows-gnu.tar.gz
         sha256: 248929e2b287a0dcadaf0d2483172ab1eb4624bf5bc2cd863fea4985e6ebd4ab
-        target_directory: rust-std
+        target_directory: rust-std/x86_64-pc-windows-gnu
       - url: https://static.rust-lang.org/dist/${{ year }}-${{ month }}-${{ day }}/rust-std-nightly-aarch64-pc-windows-msvc.tar.xz
         sha256: fd6e14f26a719ffcfc15a6bfd920be3bbb71c5668014576608127c994631468b
-        target_directory: rust-std
+        target_directory: rust-std/aarch64-pc-windows-msvc
 
 build:
   number: ${{ build_number }}
