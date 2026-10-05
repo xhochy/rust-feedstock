@@ -66,8 +66,8 @@ echo Setting up configuration
 setup_conda_rc .\ ".\recipe" .\.ci_support\%CONFIG%.yaml
 if !errorlevel! neq 0 exit /b !errorlevel!
 echo Running build setup
-CALL run_conda_forge_build_setup
-
+:: Overriding global run_conda_forge_build_setup_win with local copy.
+CALL recipe\run_conda_forge_build_setup_win
 
 if !errorlevel! neq 0 exit /b !errorlevel!
 
@@ -87,33 +87,10 @@ if NOT [%flow_run_id%] == [] (
 
 call :end_group
 
-:: Temporary diagnostics for the Windows test-channel indexing failure.
-:: Keep failures informational so that we still collect the real build result.
-call :run_repodata_diagnostics
-if !errorlevel! neq 0 echo Repodata diagnostics could not be completed; continuing with the recipe build.
-
-:: The same Rust archive fails indexing in the runner's default temp directory
-:: but passes indexing and tests in this checkout-local directory.
-:: Retain the original paths for the failure diagnostics below.
-set "RATTLER_BUILD_ORIGINAL_TEMP=%TEMP%"
-set "RATTLER_BUILD_ORIGINAL_TMP=%TMP%"
-set "TEMP=%REPO_ROOT%\.repodata-diagnostics\tmp"
-set "TMP=%TEMP%"
-if not exist "%TEMP%" (
-    mkdir "%TEMP%"
-    if !errorlevel! neq 0 exit /b !errorlevel!
-)
-echo Using Rust build temporary directory: %TEMP%
-
 :: Build the recipe
 echo Building recipe
-rattler-build.exe build -vvv --recipe "recipe" -m .ci_support\%CONFIG%.yaml %EXTRA_CB_OPTIONS% --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
-set "RECIPE_BUILD_RC=!errorlevel!"
-if !RECIPE_BUILD_RC! neq 0 (
-    echo Recipe build failed with exit code !RECIPE_BUILD_RC!; testing the failing archive independently.
-    call :diagnose_failed_package
-    exit /b !RECIPE_BUILD_RC!
-)
+rattler-build.exe build --recipe "recipe" -m .ci_support\%CONFIG%.yaml %EXTRA_CB_OPTIONS% --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
+if !errorlevel! neq 0 exit /b !errorlevel!
 
 call :start_group "Inspecting artifacts"
 :: inspect_artifacts was only added in conda-forge-ci-setup 4.9.4
@@ -160,91 +137,6 @@ if /i "%UPLOAD_PACKAGES%" == "true" (
 )
 
 exit
-
-:: Temporary diagnostic subroutine. Rerendering will remove this integration.
-:run_repodata_diagnostics
-setlocal
-set "DIAG_ROOT=%REPO_ROOT%\.repodata-diagnostics"
-set "DIAG_RECIPE=%REPO_ROOT%\.scripts\repodata-repro\recipe.yaml"
-if not exist "%DIAG_RECIPE%" (
-    echo Missing diagnostic recipe: %DIAG_RECIPE%
-    endlocal & exit /b 1
-)
-if not exist "%DIAG_ROOT%\tmp" (
-    mkdir "%DIAG_ROOT%\tmp"
-    if !errorlevel! neq 0 (endlocal & exit /b !errorlevel!)
-)
-
-call :start_group "Repodata diagnostic: default temporary directory"
-echo TEMP=%TEMP%
-echo TMP=%TMP%
-rattler-build.exe --version
-rattler-build.exe build -vvv --color never --recipe "%DIAG_RECIPE%" --output-dir "%DIAG_ROOT%\default" --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
-set "DIAG_DEFAULT_RC=!errorlevel!"
-echo Default temporary directory diagnostic exit code: !DIAG_DEFAULT_RC!
-call :end_group
-
-call :start_group "Repodata diagnostic: relocated temporary directory"
-set "TEMP=%DIAG_ROOT%\tmp"
-set "TMP=%TEMP%"
-echo TEMP=%TEMP%
-echo TMP=%TMP%
-rattler-build.exe build -vvv --color never --recipe "%DIAG_RECIPE%" --output-dir "%DIAG_ROOT%\relocated" --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
-set "DIAG_RELOCATED_RC=!errorlevel!"
-echo Relocated temporary directory diagnostic exit code: !DIAG_RELOCATED_RC!
-call :end_group
-
-echo Repodata diagnostic results: default=!DIAG_DEFAULT_RC!, relocated=!DIAG_RELOCATED_RC!
-:: Restore TEMP/TMP before the real build; this is not a workaround or test skip.
-endlocal
-exit /b 0
-
-:: The tiny fixture may pass even when the actual Rust archive fails indexing.
-:: Retry the same failing std archive in separate processes and temp locations.
-:diagnose_failed_package
-setlocal
-set "REAL_OUTPUT_DIR=%CONDA_BLD_PATH%"
-if not defined REAL_OUTPUT_DIR set "REAL_OUTPUT_DIR=%REPO_ROOT%\output"
-set "DIAG_ROOT=%REPO_ROOT%\.repodata-diagnostics"
-set "DIAG_PACKAGE="
-for %%P in ("%REAL_OUTPUT_DIR%\broken\rust-std-*.conda") do (
-    if exist "%%~fP" if not defined DIAG_PACKAGE set "DIAG_PACKAGE=%%~fP"
-)
-if not defined DIAG_PACKAGE (
-    echo No failing rust-std archive found in %REAL_OUTPUT_DIR%\broken; no package diagnostic to run.
-    endlocal & exit /b 0
-)
-if not exist "%DIAG_ROOT%\tmp" (
-    mkdir "%DIAG_ROOT%\tmp"
-    if !errorlevel! neq 0 (endlocal & exit /b !errorlevel!)
-)
-
-call :start_group "Rust archive diagnostic: default temporary directory"
-if defined RATTLER_BUILD_ORIGINAL_TEMP set "TEMP=%RATTLER_BUILD_ORIGINAL_TEMP%"
-if defined RATTLER_BUILD_ORIGINAL_TMP set "TMP=%RATTLER_BUILD_ORIGINAL_TMP%"
-echo Package: %DIAG_PACKAGE%
-attrib "%DIAG_PACKAGE%"
-echo TEMP=%TEMP%
-echo TMP=%TMP%
-rattler-build.exe test -vvv --color never --package-file "%DIAG_PACKAGE%" --channel conda-forge
-set "DIAG_DEFAULT_RC=!errorlevel!"
-echo Default temporary directory Rust archive test exit code: !DIAG_DEFAULT_RC!
-call :end_group
-
-call :start_group "Rust archive diagnostic: relocated temporary directory"
-set "TEMP=%DIAG_ROOT%\tmp"
-set "TMP=%TEMP%"
-echo Package: %DIAG_PACKAGE%
-echo TEMP=%TEMP%
-echo TMP=%TMP%
-rattler-build.exe test -vvv --color never --package-file "%DIAG_PACKAGE%" --channel conda-forge
-set "DIAG_RELOCATED_RC=!errorlevel!"
-echo Relocated temporary directory Rust archive test exit code: !DIAG_RELOCATED_RC!
-call :end_group
-
-echo Rust archive diagnostic results: default=!DIAG_DEFAULT_RC!, relocated=!DIAG_RELOCATED_RC!
-endlocal
-exit /b 0
 
 :: Logging subroutines
 
