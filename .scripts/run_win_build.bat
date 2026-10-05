@@ -87,6 +87,11 @@ if NOT [%flow_run_id%] == [] (
 
 call :end_group
 
+:: Temporary diagnostics for the Windows test-channel indexing failure.
+:: Keep failures informational so that we still collect the real build result.
+call :run_repodata_diagnostics
+if !errorlevel! neq 0 echo Repodata diagnostics could not be completed; continuing with the recipe build.
+
 :: Build the recipe
 echo Building recipe
 rattler-build.exe build -vvv --recipe "recipe" -m .ci_support\%CONFIG%.yaml %EXTRA_CB_OPTIONS% --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
@@ -137,6 +142,44 @@ if /i "%UPLOAD_PACKAGES%" == "true" (
 )
 
 exit
+
+:: Temporary diagnostic subroutine. Rerendering will remove this integration.
+:run_repodata_diagnostics
+setlocal
+set "DIAG_ROOT=%REPO_ROOT%\.repodata-diagnostics"
+set "DIAG_RECIPE=%REPO_ROOT%\.scripts\repodata-repro\recipe.yaml"
+if not exist "%DIAG_RECIPE%" (
+    echo Missing diagnostic recipe: %DIAG_RECIPE%
+    endlocal & exit /b 1
+)
+if not exist "%DIAG_ROOT%\tmp" (
+    mkdir "%DIAG_ROOT%\tmp"
+    if !errorlevel! neq 0 (endlocal & exit /b !errorlevel!)
+)
+
+call :start_group "Repodata diagnostic: default temporary directory"
+echo TEMP=%TEMP%
+echo TMP=%TMP%
+rattler-build.exe --version
+rattler-build.exe build -vvv --color never --recipe "%DIAG_RECIPE%" --output-dir "%DIAG_ROOT%\default" --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
+set "DIAG_DEFAULT_RC=!errorlevel!"
+echo Default temporary directory diagnostic exit code: !DIAG_DEFAULT_RC!
+call :end_group
+
+call :start_group "Repodata diagnostic: relocated temporary directory"
+set "TEMP=%DIAG_ROOT%\tmp"
+set "TMP=%TEMP%"
+echo TEMP=%TEMP%
+echo TMP=%TMP%
+rattler-build.exe build -vvv --color never --recipe "%DIAG_RECIPE%" --output-dir "%DIAG_ROOT%\relocated" --build-platform %BUILD_PLATFORM% --target-platform %HOST_PLATFORM%
+set "DIAG_RELOCATED_RC=!errorlevel!"
+echo Relocated temporary directory diagnostic exit code: !DIAG_RELOCATED_RC!
+call :end_group
+
+echo Repodata diagnostic results: default=!DIAG_DEFAULT_RC!, relocated=!DIAG_RELOCATED_RC!
+:: Restore TEMP/TMP before the real build; this is not a workaround or test skip.
+endlocal
+exit /b 0
 
 :: Logging subroutines
 

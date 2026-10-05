@@ -1,0 +1,32 @@
+# Temporary diagnostic: no Rust sources or external package dependencies.
+package:
+  name: repodata-repro
+  version: "1.0"
+
+build:
+  number: 0
+  noarch: generic
+  script:
+    - if: win
+      then:
+        - mkdir "%PREFIX%\Library\lib\rustlib"
+        - echo fixture>"%PREFIX%\Library\lib\rustlib\fixture.txt"
+      else:
+        - mkdir -p "$PREFIX/lib/rustlib"
+        - printf 'fixture\n' > "$PREFIX/lib/rustlib/fixture.txt"
+
+requirements:
+  run:
+    - if: win
+      then: __win
+      else: __unix
+
+tests:
+  - script:
+      - if: win
+        then: if not exist "%PREFIX%\Library\lib\rustlib\fixture.txt" exit /b 1
+        else: test -f "$PREFIX/lib/rustlib/fixture.txt"
+
+about:
+  license: MIT
+  summary: Reproducer for temporary test-channel indexing on Windows
